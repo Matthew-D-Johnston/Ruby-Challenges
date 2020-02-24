@@ -84,3 +84,32 @@ class Sieve
 end
 ```
 
+A more explicit "marking" of primes as "prime" and composites as "composite":
+
+```ruby
+class Sieve
+  def initialize(limit)
+    @limit = limit
+  end
+  
+  def primes
+    results = Hash.new(0)
+
+    2.upto(@limit) do |number|
+      if results[number] == "composite"
+        next
+      else
+        results[number] = "prime"
+        2.upto(@limit / number) do |multiple|
+          results[number * multiple] = "composite"
+        end
+      end
+    end
+    
+    primes = []
+    results.each { |key, value| primes << key if value == "prime" }
+    primes
+  end
+end
+```
+
