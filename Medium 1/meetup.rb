@@ -11,25 +11,24 @@ class Meetup
   end
 
   def day(weekday, schedule)
-    case schedule
-    when :first then create_date(weekday, 1, 7)
-    when :second then create_date(weekday, 8, 14)
-    when :third then create_date(weekday, 15, 21)
-    when :fourth then create_date(weekday, 22, 28)
-    when :teenth then create_date(weekday, 13, 19)
-    when :last then create_date(weekday, @first_last_day, @last_last_day)
-    end
+    create_date(weekday, day_range(schedule))
   end
 
-  def create_date(weekday, first_day, last_day)
-    date = nil
+  private
 
-    first_day.upto(last_day) do |day|
-      test_date = Date.new(@year, @month, day)
-      day_of_week = test_date.strftime('%A').downcase
-      date = test_date if day_of_week.to_sym == weekday
+  def create_date(weekday, days)
+    the_day = "#{weekday}?".to_sym
+    days.map { |day| Date.new(@year, @month, day) }.select(&the_day).first
+  end
+
+  def day_range(schedule)
+    case schedule
+    when :first then 1..7
+    when :second then 8..14
+    when :third then 15..21
+    when :fourth then 22..28
+    when :teenth then 13..19
+    when :last then @first_last_day..@last_last_day
     end
-
-    date
   end
 end
